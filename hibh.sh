@@ -21,19 +21,22 @@ show_last_logins() {
     last_cmd=$(last -a | grep "pts\|tty" | tac | uniq -u)
 
     while read -r line; do
+        # Extract 'last' command final column (hostname)
         c_host=$(echo "$line" | awk '{print $NF}')
-
-        # Compute something based on the 6th field (e.g., append "_processed" to the 6th field)
+        
+        # Obtain IP Geo data from geoiplookup.io based on c_host value 
         c_host_geoip_json=$(curl -s https://json.geoiplookup.io/${c_host})
         
-        c_host_geoip=$(echo $c_host_geoip_json | jq -r '.country_name')
+        c_host_country=$(echo $c_host_geoip_json | jq -r '.country_name')
+        c_host_city=$(echo $c_host_geoip_json | jq -r '.city')
 
-        if [[ "$c_host_geoip" == "null" ]]; then
-            c_host_geoip="No host"
+        if [[ "$c_host_country" == "null" ]]; then
+            c_host_country="No host"
+            c_host_city=""
         fi
         
         # Append the modified line to the final_output variable
-        last_cmd_geoip+="${line} ${c_host_geoip}\n"
+        last_cmd_geoip+="${line} ${c_host_country} ${c_host_city}\n"
     done <<< "$last_cmd"
 
     dialog --clear --backtitle "Last logins" --title \
