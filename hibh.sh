@@ -18,7 +18,7 @@ show_main_menu() {
 
 # Function to display last logins
 show_last_logins() {
-    last_cmd=$(last -a | grep "pts\|tty" | tac | uniq -u)
+    last_cmd=$(last -a | grep "pts\|tty" | uniq -u)
 
     while read -r line; do
         # Extract 'last' command final column (hostname)
