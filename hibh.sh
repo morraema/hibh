@@ -27,7 +27,7 @@ show_last_logins() {
         # Obtain IP Geo data from geoiplookup.io based on c_host value 
         c_host_geoip_json=$(curl -s https://json.geoiplookup.io/${c_host})
         
-        c_host_country=$(echo $c_host_geoip_json | jq -r '.country_name')
+        c_host_country=$(echo $c_host_geoip_json | jq -r '.country_name'),
         c_host_city=$(echo $c_host_geoip_json | jq -r '.city')
 
         if [[ "$c_host_country" == "null" ]]; then
@@ -40,7 +40,7 @@ show_last_logins() {
     done <<< "$last_cmd"
 
     dialog --clear --backtitle "Last logins" --title \
-        "Last logins" --msgbox "$last_cmd_geoip" 10 100
+        "Last logins" --msgbox "$last_cmd_geoip" 30 100
     show_main_menu
 }
 
